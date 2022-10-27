@@ -8,12 +8,12 @@ const state = {
 const mutations = {
   // 设置token
   setToken(state, token) {
-    state.setToken = token // 将数据设置给 vuex
+    state.token = token // 将数据设置给 vuex
     setToken(token) // vuex 和缓存数据同步
   },
   // 删除缓存
   removeToken(state) {
-    state.removeToken = null // 将 vuex 数据置空
+    state.token = null // 将 vuex 数据置空
     removeToken() // 同步到缓存
   }
 }
