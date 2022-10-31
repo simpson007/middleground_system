@@ -36,7 +36,12 @@ service.interceptors.response.use(response => {
     return Promise.reject(new Error(message))
   }
 }, error => {
-  Message.error(error.message) // 提示错误信息
+  if (error.response && error.response.data && error.response.data.code === 10002) {
+    store.dispatch('user/logout')
+    router.push('/login')
+  } else {
+    Message.error(error.message) // 提示错误信息
+  }
   return Promise.reject(error) // 返回执行错误 让当前的执行链跳出成功 直接进入 catch
 }) // 响应拦截器
 
