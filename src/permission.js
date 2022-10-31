@@ -6,7 +6,7 @@ import 'nprogress/nprogress.css'
 const whiteList = ['/login', '/404']
 
 // 路由的前置守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   // 开启进度条
   NProgress.start()
   //  首先判断有无token
@@ -16,6 +16,10 @@ router.beforeEach((to, from, next) => {
       //  表示去的是登录页
       next('/') // 跳到主页
     } else {
+      // 如果没有id这个值 才会调用 vuex 的获取资料的action
+      if (!store.getters.userId) {
+        await store.dispatch('user/getUserInfo')
+      }
       next() // 直接放行
     }
   } else {

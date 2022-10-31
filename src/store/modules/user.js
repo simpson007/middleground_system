@@ -1,5 +1,5 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login, getUserInfo } from '@/api/user.js'
+import { login, getUserInfo, getUserDetailById } from '@/api/user.js'
 
 const state = {
   token: getToken(), // 设置 token 为共享状态 初始化 vuex 时先从缓存中读取
@@ -32,7 +32,8 @@ const actions = {
   },
   async getUserInfo(context) {
     const result = await getUserInfo()
-    context.commit('setUserInfo', result)
+    const baseInfo = await getUserDetailById(result.userId)
+    context.commit('setUserInfo', { ...result, ...baseInfo })
     return result
   }
 }
