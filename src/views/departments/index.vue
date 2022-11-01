@@ -2,57 +2,9 @@
   <div class="dashboard-container">
     <div class="app-container">
       <el-card class="tree-card">
-        <el-row type="flex" justify="space-between" align="middle" style="height: 40px">
-          <el-col>
-            <span>江苏天泽科技有限公司</span>
-          </el-col>
-          <el-col :span="4">
-            <el-row type="flex" justify="end">
-              <el-col>
-                负责人
-              </el-col>
-              <el-col>
-                <el-dropdown>
-                  <span>操作<i class="el-icon-arrow-down" /></span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>
-                      添加子部门
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-tree :data="departs" :props="defaultProps" :default-expend-all="true">
-          <el-row slot-scope="{data}" type="flex" justify="space-between" align="middle" style="width: 100%;height: 40px">
-            <el-col>
-              <span>{{ data.name }}</span>
-            </el-col>
-            <el-col :span="4">
-              <el-row type="flex" justify="end">
-                <el-col>
-                  {{ data.manager }}
-                </el-col>
-                <el-col>
-                  <el-dropdown>
-                    <span>操作<i class="el-icon-arrow-down" /></span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>
-                        添加子部门
-                      </el-dropdown-item>
-                      <el-dropdown-item>
-                        编辑部门
-                      </el-dropdown-item>
-                      <el-dropdown-item>
-                        删除部门
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </el-col>
-              </el-row>
-            </el-col>
-          </el-row>
+        <tree-tools :tree-node="company" :is-root="true" />
+        <el-tree :data="departs" :props="defaultProps" default-expand-all>
+          <tree-tools slot-scope="{data}" :tree-node="data" />
         </el-tree>
       </el-card>
     </div>
@@ -60,9 +12,14 @@
 </template>
 
 <script>
+import TreeTools from './components/tree-tools.vue'
 export default {
+  components: {
+    TreeTools
+  },
   data() {
     return {
+      company: { name: '江苏天泽科技有限公司', manager: '负责人' },
       departs: [{ name: '总裁办', manager: '孙策', children: [{ name: '董事会', manager: '孙权' }] },
         { name: '行政部', manager: '周瑜' }, { name: '人事部', manager: '张昭' }
       ],
