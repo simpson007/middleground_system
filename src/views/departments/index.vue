@@ -14,6 +14,7 @@
 <script>
 import TreeTools from './components/tree-tools.vue'
 import { getDepartments } from '@/api/departments'
+import {tranListToTreeData} from '@/utils'
 export default {
   components: {
     TreeTools
@@ -34,7 +35,7 @@ export default {
     async getDepartments() {
       const result = await getDepartments()
       this.company = { name: result.companyName, manager: '负责人' }
-      this.departs = result.depts
+      this.departs = tranListToTreeData(result.depts, '')
       console.log(result)
     }
   }
