@@ -9,16 +9,16 @@
           {{ treeNode.manager }}
         </el-col>
         <el-col>
-          <el-dropdown>
+          <el-dropdown @command="operateDepts">
             <span>操作<i class="el-icon-arrow-down" /></span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
+              <el-dropdown-item command="add">
                 添加子部门
               </el-dropdown-item>
-              <el-dropdown-item v-if="!isRoot">
+              <el-dropdown-item v-if="!isRoot" command="edit">
                 编辑部门
               </el-dropdown-item>
-              <el-dropdown-item v-if="!isRoot">
+              <el-dropdown-item v-if="!isRoot" command="del">
                 删除部门
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { delDepartments } from '@/api/departments'
 export default {
   props: {
     treeNode: {
@@ -39,6 +40,24 @@ export default {
     isRoot: {
       default: false,
       type: Boolean
+    }
+  },
+  methods: {
+    operateDepts(type) {
+      if (type === 'add') {
+        alert('添加子部门')
+      } else if (
+        type === 'edit'
+      ) {
+        alert('编辑部门')
+      } else {
+        this.$confirm('确认要删除子部门吗').then(() => {
+          return delDepartments(this.treeNode.id)
+        }).then(() => {
+          this.$emit('delDepts')
+          this.$message.success('删除成功')
+        })
+      }
     }
   }
 }
