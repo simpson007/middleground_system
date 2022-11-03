@@ -45,7 +45,7 @@ export default {
   methods: {
     operateDepts(type) {
       if (type === 'add') {
-        alert('添加子部门')
+        this.$emit('addDepts', this.treeNode)
       } else if (
         type === 'edit'
       ) {

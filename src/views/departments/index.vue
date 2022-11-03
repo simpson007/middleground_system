@@ -2,22 +2,24 @@
   <div class="dashboard-container">
     <div class="app-container">
       <el-card class="tree-card">
-        <tree-tools :tree-node="company" :is-root="true" />
+        <tree-tools :tree-node="company" :is-root="true" @addDepts="addDepts" />
         <el-tree :data="departs" :props="defaultProps" default-expand-all>
-          <tree-tools slot-scope="{data}" :tree-node="data" @delDepts="getDepartments" />
+          <tree-tools slot-scope="{data}" :tree-node="data" @delDepts="getDepartments" @addDepts="addDepts" />
         </el-tree>
       </el-card>
+      <add-dept :show-dialog="showDialog" />
     </div>
   </div>
 </template>
 
 <script>
 import TreeTools from './components/tree-tools.vue'
+import AddDept from './components/add-dept.vue'
 import { getDepartments } from '@/api/departments'
 import { tranListToTreeData } from '@/utils'
 export default {
   components: {
-    TreeTools
+    TreeTools, AddDept
   },
   data() {
     return {
@@ -25,7 +27,8 @@ export default {
       departs: [],
       defaultProps: {
         label: 'name'
-      }
+      },
+      showDialog: false
     }
   },
   created() {
@@ -37,6 +40,10 @@ export default {
       this.company = { name: result.companyName, manager: '负责人' }
       this.departs = tranListToTreeData(result.depts, '')
       console.log(result)
+    },
+    addDepts(node) {
+      this.showDialog = true
+      this.node = node
     }
   }
 
