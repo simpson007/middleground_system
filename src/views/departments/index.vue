@@ -7,7 +7,7 @@
           <tree-tools slot-scope="{data}" :tree-node="data" @delDepts="getDepartments" @addDepts="addDepts" />
         </el-tree>
       </el-card>
-      <add-dept :show-dialog="showDialog" />
+      <add-dept :show-dialog="showDialog" :tree-node="node" />
     </div>
   </div>
 </template>
@@ -28,7 +28,8 @@ export default {
       defaultProps: {
         label: 'name'
       },
-      showDialog: false
+      showDialog: false,
+      node: null
     }
   },
   created() {
@@ -37,7 +38,7 @@ export default {
   methods: {
     async getDepartments() {
       const result = await getDepartments()
-      this.company = { name: result.companyName, manager: '负责人' }
+      this.company = { name: result.companyName, manager: '负责人', id: '' }
       this.departs = tranListToTreeData(result.depts, '')
       console.log(result)
     },
