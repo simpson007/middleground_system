@@ -7,7 +7,7 @@
           <tree-tools slot-scope="{data}" :tree-node="data" @delDepts="getDepartments" @addDepts="addDepts" />
         </el-tree>
       </el-card>
-      <add-dept :show-dialog="showDialog" :tree-node="node" />
+      <add-dept :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
     </div>
   </div>
 </template>

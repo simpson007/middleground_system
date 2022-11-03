@@ -1,6 +1,6 @@
 <template>
-  <el-dialog title="新增部门" :visible="showDialog">
-    <el-form :model="formData" :rules="rules" label-width="120px">
+  <el-dialog title="新增部门" :visible="showDialog" @close="btnCancel">
+    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="部门名称" prop="name">
         <el-input v-model="formData.name" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
@@ -18,15 +18,15 @@
     </el-form>
     <el-row type="flex" justify="center">
       <el-col :span="6">
-        <el-button size="small">取消</el-button>
-        <el-button type="primary" size="small">确定</el-button>
+        <el-button size="small" @click="btnCancel">取消</el-button>
+        <el-button type="primary" size="small" @click="btnOk">确定</el-button>
       </el-col>
     </el-row>
   </el-dialog>
 </template>
 
 <script>
-import { getDepartments } from '@/api/departments'
+import { getDepartments, addDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -75,6 +75,19 @@ export default {
   methods: {
     async getEmployeeSimple() {
       this.peoples = await getEmployeeSimple()
+    },
+    btnOk() {
+      this.$refs.deptForm.validate(async isOk => {
+        if (isOk) {
+          await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          this.$emit('addDepts')
+          this.$emit('update:showDialog', false)
+        }
+      })
+    },
+    btnCancel() {
+      this.$refs.deptForm.resetFields()
+      this.$emit('update:showDialog', false)
     }
   }
 }
