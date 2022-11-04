@@ -114,7 +114,7 @@ export default {
         code: '',
         manager: '',
         introduce: ''
-      },
+      }
       this.$refs.deptForm.resetFields()
       this.$emit('update:showDialog', false)
     }

@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div v-loading="loading" class="dashboard-container">
     <div class="app-container">
       <el-card class="tree-card">
         <tree-tools :tree-node="company" :is-root="true" @addDepts="addDepts" />
@@ -23,6 +23,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       company: {},
       departs: [],
       defaultProps: {
@@ -37,10 +38,11 @@ export default {
   },
   methods: {
     async getDepartments() {
+      this.loading = true
       const result = await getDepartments()
       this.company = { name: result.companyName, manager: '负责人', id: '' }
       this.departs = tranListToTreeData(result.depts, '')
-      console.log(result)
+      setTimeout(() => (this.loading = false), 500)
     },
     addDepts(node) {
       this.showDialog = true
