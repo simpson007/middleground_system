@@ -7,18 +7,24 @@
             <el-row style="height:60px">
               <el-button size="small" type="primary">新增角色</el-button>
             </el-row>
-            <el-table border="">
-              <el-table-column label="序号" width="150px" />
-              <el-table-column label="角色" width="300px" />
-              <el-table-column label="描述" />
-              <el-table-column label="操作">
+            <el-table border="" :data="list">
+              <el-table-column align="center" type="index" label="序号" width="150px" />
+              <el-table-column align="center" prop="name" label="角色" width="300px" />
+              <el-table-column align="center" prop="description" label="描述" />
+              <el-table-column align="center" label="操作">
                 <el-button size="small" type="success">分配权限</el-button>
                 <el-button size="small" type="primary">编辑</el-button>
                 <el-button size="small" type="danger">删除</el-button>
               </el-table-column>
             </el-table>
             <el-row type="flex" justify="center" align="middle" style="height:60px">
-              <el-pagination layout="prev, pager, next" />
+              <el-pagination
+                layout="prev, pager, next"
+                :page-size="page.pagesize"
+                :total="page.total"
+                :current-page="page.page"
+                @current-change="changePage"
+              />
             </el-row>
           </el-tab-pane>
           <el-tab-pane label="公司信息">
@@ -45,8 +51,32 @@
 </template>
 
 <script>
+import { getRoleList } from '@/api/setting'
 export default {
-
+  data() {
+    return {
+      list: [],
+      page: {
+        page: 1,
+        pagesize: 10,
+        total: 0
+      }
+    }
+  },
+  created() {
+    this.getRoleList()
+  },
+  methods: {
+    async getRoleList() {
+      const { total, rows } = await getRoleList(this.page)
+      this.page.total = total
+      this.list = rows
+    },
+    changePage(newPage) {
+      this.page.page = newPage
+      this.getRoleList()
+    }
+  }
 }
 </script>
 
