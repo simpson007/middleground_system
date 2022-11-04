@@ -49,7 +49,7 @@ export default {
       } else if (
         type === 'edit'
       ) {
-        alert('编辑部门')
+        this.$emit('editDepts', this.treeNode)
       } else {
         this.$confirm('确认要删除子部门吗').then(() => {
           return delDepartments(this.treeNode.id)

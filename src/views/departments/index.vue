@@ -4,10 +4,10 @@
       <el-card class="tree-card">
         <tree-tools :tree-node="company" :is-root="true" @addDepts="addDepts" />
         <el-tree :data="departs" :props="defaultProps" default-expand-all>
-          <tree-tools slot-scope="{data}" :tree-node="data" @delDepts="getDepartments" @addDepts="addDepts" />
+          <tree-tools slot-scope="{data}" :tree-node="data" @delDepts="getDepartments" @addDepts="addDepts" @editDepts="editDepts" />
         </el-tree>
       </el-card>
-      <add-dept :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
+      <add-dept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
     </div>
   </div>
 </template>
@@ -45,6 +45,11 @@ export default {
     addDepts(node) {
       this.showDialog = true
       this.node = node
+    },
+    editDepts(node) {
+      this.showDialog = true
+      this.node = node
+      this.$refs.addDept.getDepartDetail(node.id)
     }
   }
 
