@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments, getDepartDetail } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartDetail, updateDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -42,12 +42,23 @@ export default {
   data() {
     const checkNameRepeat = async(rule, value, callback) => {
       const { depts } = await getDepartments()
-      const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
+      let isRepeat = false
+      if (this.formData.id) {
+        isRepeat = depts.filter(item => item.pid === this.treeNode.pid && item.id !== this.treeNode.id).some(item => item.name === value)
+      } else {
+        isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
+      }
       isRepeat ? callback(new Error(`同级部门下已经有${value}部门了`)) : callback()
     }
     const checkCodeRepeat = async(rule, value, callback) => {
       const { depts } = await getDepartments()
-      const isRepeat = depts.some(item => item.code === value && value)
+      let isRepeat = false
+      if (this.formData.id) {
+        isRepeat = depts.filter(item => item.id !== this.treeNode.id).some(item => item.code === value && value)
+      } else {
+        isRepeat = depts.some(item => item.code === value && value)
+      }
+
       isRepeat ? callback(new Error(`组织架构下已经有部门使用${value}编码了`)) : callback()
     }
     return {
@@ -87,7 +98,11 @@ export default {
     btnOk() {
       this.$refs.deptForm.validate(async isOk => {
         if (isOk) {
-          await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          if (this.formData.id) {
+            await updateDepartments(this.formData)
+          } else {
+            await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          }
           this.$emit('addDepts')
           this.$emit('update:showDialog', false)
         }
