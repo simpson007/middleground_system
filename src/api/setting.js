@@ -7,3 +7,10 @@ export function getRoleList(params) {
     params
   })
 }
+
+// 获取企业数据
+export function getCompanyInfo(companyId) {
+  return request({
+    url: `/company/${companyId}`
+  })
+}

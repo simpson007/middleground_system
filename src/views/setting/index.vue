@@ -31,16 +31,16 @@
             <el-alert type="info" show-icon :closable="false" title="对公司名称、公司地址、营业执照、公司地区的更新，将使得公司资料被重新审核，请谨慎修改" />
             <el-form label-width="120px" style="margin-top:40px">
               <el-form-item label="公司名称">
-                <el-input :disabled="true" style="width:400px" />
+                <el-input v-model="formData.name" :disabled="true" style="width:400px" />
               </el-form-item>
               <el-form-item label="公司地址">
-                <el-input :disabled="true" style="width:400px" />
+                <el-input v-model="formData.companyAddress" :disabled="true" style="width:400px" />
               </el-form-item>
               <el-form-item label="公司邮箱">
-                <el-input :disabled="true" style="width:400px" />
+                <el-input v-model="formData.mailbox" :disabled="true" style="width:400px" />
               </el-form-item>
               <el-form-item label="备注">
-                <el-input :disabled="true" style="width:400px" type="textarea" :rows="3" />
+                <el-input v-model="formData.remarks" :disabled="true" style="width:400px" type="textarea" :rows="3" />
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -51,7 +51,8 @@
 </template>
 
 <script>
-import { getRoleList } from '@/api/setting'
+import { getRoleList, getCompanyInfo } from '@/api/setting'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -60,17 +61,25 @@ export default {
         page: 1,
         pagesize: 10,
         total: 0
-      }
+      },
+      formData: {}
     }
+  },
+  computed: {
+    ...mapGetters(['companyId'])
   },
   created() {
     this.getRoleList()
+    this.getCompanyInfo()
   },
   methods: {
     async getRoleList() {
       const { total, rows } = await getRoleList(this.page)
       this.page.total = total
       this.list = rows
+    },
+    async getCompanyInfo() {
+      this.formData = await getCompanyInfo(this.companyId)
     },
     changePage(newPage) {
       this.page.page = newPage
