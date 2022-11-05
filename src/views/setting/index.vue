@@ -14,7 +14,7 @@
               <el-table-column align="center" label="操作">
                 <template slot-scope="{row}">
                   <el-button size="small" type="success">分配权限</el-button>
-                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button size="small" type="primary" @click="editRole(row.id)">编辑</el-button>
                   <el-button size="small" type="danger" @click="deleteRole(row.id)">删除</el-button>
                 </template>
               </el-table-column>
@@ -48,23 +48,47 @@
           </el-tab-pane>
         </el-tabs>
       </el-card>
+      <el-dialog title="编辑角色" :visible="showDialog">
+        <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
+          <el-form-item prop="name" label="角色名称">
+            <el-input v-model="roleForm.name" style="width:80%" />
+          </el-form-item>
+          <el-form-item label="角色描述">
+            <el-input v-model="roleForm.description" style="width:80%" />
+          </el-form-item>
+        </el-form>
+        <el-row type="flex" justify="center">
+          <el-col :span="6">
+            <el-button size="small" @click="btnCancel">取消</el-button>
+            <el-button size="small" type="primary" @click="btnOk">确定</el-button>
+          </el-col>
+        </el-row>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
+      showDialog: false,
       list: [],
       page: {
         page: 1,
         pagesize: 10,
         total: 0
       },
-      formData: {}
+      formData: {},
+      roleForm: {},
+      rules: {
+        name:
+          [{
+            required: true, message: '角色名不能为空', trigger: 'blur'
+          }]
+      }
     }
   },
   computed: {
@@ -96,7 +120,25 @@ export default {
     changePage(newPage) {
       this.page.page = newPage
       this.getRoleList()
-    }
+    },
+    async editRole(id) {
+      this.roleForm = await getRoleDetail(id)
+      this.showDialog = true
+    },
+    async btnOk(id) {
+      try {
+        await this.$refs.roleForm.validate()
+        if (this.roleForm.id) {
+          await updateRole(this.roleForm)
+        }
+        this.getRoleList()
+        this.$message.success('编辑成功')
+        this.showDialog = false
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    btnCancel() {}
   }
 }
 </script>
