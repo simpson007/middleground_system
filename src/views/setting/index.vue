@@ -12,9 +12,11 @@
               <el-table-column align="center" prop="name" label="角色" width="300px" />
               <el-table-column align="center" prop="description" label="描述" />
               <el-table-column align="center" label="操作">
-                <el-button size="small" type="success">分配权限</el-button>
-                <el-button size="small" type="primary">编辑</el-button>
-                <el-button size="small" type="danger">删除</el-button>
+                <template slot-scope="{row}">
+                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button size="small" type="danger" @click="deleteRole(row.id)">删除</el-button>
+                </template>
               </el-table-column>
             </el-table>
             <el-row type="flex" justify="center" align="middle" style="height:60px">
@@ -51,7 +53,7 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -80,6 +82,16 @@ export default {
     },
     async getCompanyInfo() {
       this.formData = await getCompanyInfo(this.companyId)
+    },
+    async deleteRole(id) {
+      try {
+        await this.$confirm('确定删除角色吗')
+        await deleteRole(id)
+        this.getRoleList()
+        this.$message.success('删除角色成功')
+      } catch (error) {
+        console.log(error)
+      }
     },
     changePage(newPage) {
       this.page.page = newPage
