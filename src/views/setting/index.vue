@@ -5,7 +5,7 @@
         <el-tabs>
           <el-tab-pane label="角色管理">
             <el-row style="height:60px">
-              <el-button size="small" type="primary">新增角色</el-button>
+              <el-button size="small" type="primary" @click="showDialog=true">新增角色</el-button>
             </el-row>
             <el-table border="" :data="list">
               <el-table-column align="center" type="index" label="序号" width="150px" />
@@ -48,7 +48,7 @@
           </el-tab-pane>
         </el-tabs>
       </el-card>
-      <el-dialog title="编辑角色" :visible="showDialog">
+      <el-dialog title="编辑角色" :visible="showDialog" @close="btnCancel">
         <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
           <el-form-item prop="name" label="角色名称">
             <el-input v-model="roleForm.name" style="width:80%" />
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole, addRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -130,6 +130,8 @@ export default {
         await this.$refs.roleForm.validate()
         if (this.roleForm.id) {
           await updateRole(this.roleForm)
+        } else {
+          await addRole(this.roleForm)
         }
         this.getRoleList()
         this.$message.success('编辑成功')
@@ -138,7 +140,14 @@ export default {
         console.log(error)
       }
     },
-    btnCancel() {}
+    btnCancel() {
+      this.roleForm = {
+        name: '',
+        description: ''
+      }
+      this.$refs.roleForm.resetFields()
+      this.showDialog = false
+    }
   }
 }
 </script>
