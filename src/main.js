@@ -16,7 +16,8 @@ import * as directives from '@/directives'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
+import Component from '@/components/pageTools'
+ 
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -34,6 +35,8 @@ import '@/permission' // permission control
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
+
+Vue.use(Component)
 
 // 遍历所有的导出的指令对象 完成自定义全局注册
 Object.keys(directives).forEach(key => {
