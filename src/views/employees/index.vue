@@ -49,6 +49,7 @@
             @current-change="changePage"
           />
         </el-row>
+        <add-employee />
       </el-card>
     </div>
   </div>
@@ -58,9 +59,10 @@
 import pageTools from '@/components/pageTools'
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
+import AddEmployee from './components/add-employee.vue'
 export default {
   components: {
-    pageTools
+    pageTools, AddEmployee
   },
   data() {
     return {
