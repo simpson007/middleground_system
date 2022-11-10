@@ -9,7 +9,7 @@
           <el-button size="small" type="danger">普通excel导出</el-button>
           <el-button size="small" type="info">复杂表头excel导出</el-button>
           <el-button size="small" type="success">excel导入</el-button>
-          <el-button size="small" type="primary">新增员工</el-button>
+          <el-button size="small" type="primary" @click="showDialog=true">新增员工</el-button>
         </template>
       </page-tools>
       <el-card v-loading="loading">
@@ -49,7 +49,7 @@
             @current-change="changePage"
           />
         </el-row>
-        <add-employee />
+        <add-employee :show-dialog.sync="showDialog" />
       </el-card>
     </div>
   </div>
@@ -72,7 +72,8 @@ export default {
         size: 10,
         total: 0
       },
-      loading: false
+      loading: false,
+      showDialog: false
     }
   },
   created() {
