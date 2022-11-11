@@ -18,7 +18,7 @@ import * as filters from '@/filters'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-import Component from '@/components/pageTools'
+import Component from '@/components'
 
 /**
  * If you don't want to use mock-server
