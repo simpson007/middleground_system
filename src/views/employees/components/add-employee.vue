@@ -1,6 +1,6 @@
 <template>
-  <el-dialog title="新增员工" :visible="showDialog">
-    <el-form label-width="120px" :model="formData" :rules="rules">
+  <el-dialog title="新增员工" :visible="showDialog" @close="btnCancel">
+    <el-form ref="addEmployee" label-width="120px" :model="formData" :rules="rules">
       <el-form-item label="姓名" prop="username">
         <el-input v-model="formData.username" style="width:50%" placeholder="请输入姓名" />
       </el-form-item>
@@ -36,8 +36,8 @@
     <template v-slot:footer>
       <el-row type="flex" justify="center">
         <el-col :span="6">
-          <el-button size="small">取消</el-button>
-          <el-button size="small" type="primary">确定</el-button>
+          <el-button size="small" @click="btnCancel">取消</el-button>
+          <el-button size="small" type="primary" @click="btnOk">确定</el-button>
         </el-col>
       </el-row>
     </template>
@@ -46,6 +46,7 @@
 
 <script>
 import { getDepartments } from '@/api/departments'
+import { addEmployee } from '@/api/employees'
 import { tranListToTreeData } from '@/utils'
 import EmployeeEnum from '@/api/constant/employees'
 export default {
@@ -96,6 +97,29 @@ export default {
     selectNode(node) {
       this.formData.departmentName = node.name
       this.showTree = false
+    },
+    async btnOk() {
+      try {
+        await this.$refs.addEmployee.validate()
+        await addEmployee(this.formData)
+        this.$parent.getEmployeeList()
+        this.$parent.showDialog = false
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    btnCancel() {
+      this.formData = {
+        username: '',
+        mobile: '',
+        formOfEmployment: '',
+        workNumber: '',
+        departmentName: '',
+        timeOfEntry: '',
+        correctionTime: ''
+      }
+      this.$refs.addEmployee.resetFields()
+      this.$emit('update:showDialog', false)
     }
   }
 }

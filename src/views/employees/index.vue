@@ -49,9 +49,9 @@
             @current-change="changePage"
           />
         </el-row>
-        <add-employee :show-dialog.sync="showDialog" />
       </el-card>
     </div>
+    <add-employee :show-dialog.sync="showDialog" />
   </div>
 </template>
 
